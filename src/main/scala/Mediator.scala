@@ -1,3 +1,3 @@
 object Mediator extends App {
-  println("hello, world!")
+  println("hello, world, twice!")
 }
