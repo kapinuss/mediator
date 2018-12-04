@@ -2,6 +2,7 @@
 *.log
 /.idea/
 /target/
+/projct
 /project/target/
 /project/project/target/
 /src/main/resources/local.conf
