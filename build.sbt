@@ -8,7 +8,6 @@ val akkaHttpVersion = "10.1.5"
 val logbackVersion = "1.2.3"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % akkaVersion,
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
   "javax.xml.bind" % "jaxb-api" % "2.3.0",

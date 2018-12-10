@@ -16,7 +16,7 @@ object Mediator extends App {
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   val serverSource: Source[Http.IncomingConnection, Future[Http.ServerBinding]] =
-    Http().bind(interface = "localhost", port = 8085)
+    Http().bind(interface = "localhost", port = 8080)
 
   val requestHandler: HttpRequest => HttpResponse = {
     case request@HttpRequest(GET, Uri.Path("/"), _, _, _) =>
@@ -36,4 +36,8 @@ object Mediator extends App {
       FileIO.toPath(Paths.get("ips.txt"))
       connection.handleWithSyncHandler(requestHandler)
     }).run()
+
+  def fileSource(file: String) = FileIO.fromPath(Paths.get(file))
+
+
 }
