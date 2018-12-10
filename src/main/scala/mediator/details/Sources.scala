@@ -18,4 +18,6 @@ object Sources {
     Http().bind(interface = "localhost", port = port)
 
   def listSource[T](list: List[T]): Source[List[T], NotUsed] = Source.single(list)
+
+  def byteString(str: String): Source[ByteString, NotUsed] = Source.single(ByteString(str))
 }
