@@ -1,6 +1,7 @@
 package mediator.details
 
 import java.nio.file.Paths
+import akka.NotUsed
 import akka.http.scaladsl.Http
 import akka.stream.IOResult
 import akka.stream.scaladsl.{FileIO, Source}
@@ -15,4 +16,6 @@ object Sources {
 
   def httpSource(port: Int): Source[Http.IncomingConnection, Future[Http.ServerBinding]] =
     Http().bind(interface = "localhost", port = port)
+
+  def listSource[T](list: List[T]): Source[List[T], NotUsed] = Source.single(list)
 }
