@@ -17,7 +17,7 @@ object Mediator extends App {
   val bindingFuture = Sources.httpSource(8080).to(Sink.foreach { connection =>
       println("Accepted new connection from " + connection.remoteAddress)
       connection.handleWithSyncHandler(http.HttpRoute.requestHandler)
-    })//.run()
+    })
 
 
   val graph = RunnableGraph.fromGraph(GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
