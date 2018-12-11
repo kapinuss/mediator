@@ -3,9 +3,9 @@ package mediator
 import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, ClosedShape}
-import akka.stream.scaladsl.{Broadcast, GraphDSL, RunnableGraph, Sink}
+import akka.stream.scaladsl.{Broadcast, GraphDSL, Merge, RunnableGraph}
 import akka.util.ByteString
-import mediator.details.{Sinks, Sources}
+import mediator.details.{Flows, Sinks, Sources}
 import scala.concurrent.ExecutionContextExecutor
 
 object Mediator extends App {
@@ -14,22 +14,21 @@ object Mediator extends App {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
-  val bindingFuture = Sources.httpSource(8080).to(Sink.foreach { connection =>
-      println("Accepted new connection from " + connection.remoteAddress)
-      connection.handleWithSyncHandler(http.HttpRoute.requestHandler)
-    })
-
-
   val graph = RunnableGraph.fromGraph(GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
     import GraphDSL.Implicits._
 
     val broadcast = builder.add(Broadcast[ByteString](2))
-    val source = Sources.byteString("test")
+    val merge = builder.add(Merge[ByteString](4))
+    val sourceFile = Sources.fileSource("example1.txt")
+    val sourceFile2 = Sources.fileSource("example2.txt")
 
-    source ~> broadcast ~> Sinks.fileSink("test1.txt")
-    broadcast ~> Sinks.fileSink("test2.txt")
+    Sources.temperedSource() ~> Flows.strToBS ~> merge
+    sourceFile2 ~> merge
+    Sources.byteStringSource("----------------") ~> merge
+    sourceFile ~> merge ~> broadcast ~> Sinks.fileSink("result1.txt")
+    broadcast ~> Sinks.fileSink("result2.txt")
 
     ClosedShape
-  })
+  }).run()
 
 }

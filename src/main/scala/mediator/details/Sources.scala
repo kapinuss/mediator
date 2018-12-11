@@ -7,6 +7,8 @@ import akka.stream.IOResult
 import akka.stream.scaladsl.{FileIO, Source}
 import akka.util.ByteString
 import scala.concurrent.Future
+import scala.language.postfixOps
+import scala.concurrent.duration._
 
 object Sources {
 
@@ -19,5 +21,9 @@ object Sources {
 
   def listSource[T](list: List[T]): Source[List[T], NotUsed] = Source.single(list)
 
-  def byteString(str: String): Source[ByteString, NotUsed] = Source.single(ByteString(str))
+  def byteStringSource(str: String): Source[ByteString, NotUsed] =
+    Source.single(ByteString(str)).initialTimeout(5 seconds)
+
+  def temperedSource(message: String = "Tick"): Source[String, NotUsed] =
+    Source.repeat("Tick").throttle(1, 1 second)
 }
