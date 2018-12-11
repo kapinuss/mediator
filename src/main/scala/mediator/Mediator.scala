@@ -5,7 +5,7 @@ import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, ClosedShape}
 import akka.stream.scaladsl.{Broadcast, GraphDSL, Merge, RunnableGraph}
 import akka.util.ByteString
-import mediator.details.{Sinks, Sources}
+import mediator.details.{Flows, Sinks, Sources}
 import scala.concurrent.ExecutionContextExecutor
 
 object Mediator extends App {
@@ -18,21 +18,17 @@ object Mediator extends App {
     import GraphDSL.Implicits._
 
     val broadcast = builder.add(Broadcast[ByteString](2))
-    val merge = builder.add(Merge[ByteString](5))
-    val sourceSingleString = Sources.byteString("")
-    val sourceFile = Sources.fileSource("")
-    val sourceFile2 = Sources.fileSource("")
-    val sourceSingleString2 = Sources.byteString("")
-    val sourceSingleString3 = Sources.byteString("")
+    val merge = builder.add(Merge[ByteString](4))
+    val sourceFile = Sources.fileSource("example1.txt")
+    val sourceFile2 = Sources.fileSource("example2.txt")
 
-    sourceFile ~> merge ~> broadcast ~> Sinks.fileSink("")
-    sourceSingleString ~> merge
-    sourceSingleString2 ~> merge
-    sourceSingleString3 ~> merge
+    Sources.temperedSource() ~> Flows.strToBS ~> merge
     sourceFile2 ~> merge
-    broadcast ~> Sinks.fileSink("")
+    Sources.byteStringSource("----------------") ~> merge
+    sourceFile ~> merge ~> broadcast ~> Sinks.fileSink("result1.txt")
+    broadcast ~> Sinks.fileSink("result2.txt")
 
     ClosedShape
-  }).run
+  }).run()
 
 }
