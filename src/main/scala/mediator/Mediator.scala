@@ -6,9 +6,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
 import akka.stream.{ActorMaterializer, ClosedShape}
 import akka.stream.scaladsl.{Broadcast, GraphDSL, Merge, RunnableGraph}
-import akka.util.ByteString
 import mediator.details.{Flows, Sinks, Sources}
-
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 
