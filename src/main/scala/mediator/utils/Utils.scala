@@ -1,6 +1,7 @@
 package mediator.utils
 
 object Utils {
+
   def mergesort[A](list: List[A])(implicit order: A => Ordered[A]): List[A] = {
     def sort(p: (List[A], List[A])): List[A] = p match {
       case (Nil, Nil) => Nil
