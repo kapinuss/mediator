@@ -18,14 +18,16 @@ object Mediator extends App {
     import GraphDSL.Implicits._
 
     val broadcast = builder.add(Broadcast[ByteString](2))
-    val merge = builder.add(Merge[ByteString](4))
+    val mergeByteStrings = builder.add(Merge[ByteString](4))
+    val mergeStrings = builder.add(Merge[String](2))
     val sourceFile = Sources.fileSource("example1.txt")
     val sourceFile2 = Sources.fileSource("example2.txt")
 
-    Sources.temperedSource() ~> Flows.strToBS ~> merge
-    sourceFile2 ~> merge
-    Sources.byteStringSource("----------------") ~> merge
-    sourceFile ~> merge ~> broadcast ~> Sinks.fileSink("result1.txt")
+    Sources.temperedSource() ~> mergeStrings ~> Flows.strToBS ~> mergeByteStrings
+    sourceFile2 ~> mergeByteStrings
+    Sources.prompt ~> mergeStrings
+    Sources.byteStringSource("----------------") ~> mergeByteStrings
+    sourceFile ~> mergeByteStrings ~> broadcast ~> Sinks.fileSink("result1.txt")
     broadcast ~> Sinks.fileSink("result2.txt")
 
     ClosedShape
