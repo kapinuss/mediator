@@ -2,11 +2,15 @@ package mediator
 
 import akka.NotUsed
 import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.HttpRequest
 import akka.stream.{ActorMaterializer, ClosedShape}
 import akka.stream.scaladsl.{Broadcast, GraphDSL, Merge, RunnableGraph}
 import akka.util.ByteString
 import mediator.details.{Flows, Sinks, Sources}
+
 import scala.concurrent.ExecutionContextExecutor
+import scala.util.{Failure, Success}
 
 object Mediator extends App {
 
@@ -17,20 +21,17 @@ object Mediator extends App {
   val graph = RunnableGraph.fromGraph(GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
     import GraphDSL.Implicits._
 
-    val broadcast = builder.add(Broadcast[ByteString](2))
-    val mergeByteStrings = builder.add(Merge[ByteString](4))
-    val mergeStrings = builder.add(Merge[String](2))
-    val sourceFile = Sources.fileSource("example1.txt")
-    val sourceFile2 = Sources.fileSource("example2.txt")
+    val mergeStrings = builder.add(Merge[String](1))
 
-    Sources.temperedSource() ~> mergeStrings ~> Flows.strToBS ~> mergeByteStrings
-    sourceFile2 ~> mergeByteStrings
-    Sources.prompt ~> mergeStrings
-    Sources.byteStringSource("----------------") ~> mergeByteStrings
-    sourceFile ~> mergeByteStrings ~> broadcast ~> Sinks.fileSink("result1.txt")
-    broadcast ~> Sinks.fileSink("result2.txt")
+    Sources.prompt ~> mergeStrings ~> Flows.strToBS
 
     ClosedShape
-  }).run()
+  })
+
+  def selfRequest(string: String = ""): Unit = Http().singleRequest(HttpRequest(uri = "http://akka.io")).onComplete {
+    case Success(res) => println(res)
+    case Failure(_) =>
+  }
+
 
 }
