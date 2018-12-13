@@ -9,6 +9,7 @@ import akka.util.ByteString
 import scala.concurrent.Future
 import scala.language.postfixOps
 import scala.concurrent.duration._
+import scala.io.StdIn
 
 object Sources {
 
@@ -26,4 +27,6 @@ object Sources {
 
   def temperedSource(message: String = "Tick"): Source[String, NotUsed] =
     Source.repeat("Tick").throttle(1, 1 second)
+
+  def prompt: Source[String, NotUsed] = Source.fromIterator(() => Iterator.continually(StdIn.readLine))
 }
