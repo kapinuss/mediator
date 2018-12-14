@@ -3,10 +3,10 @@ package mediator
 import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.model.{HttpMethods, HttpRequest}
 import akka.stream.{ActorMaterializer, ClosedShape}
-import akka.stream.scaladsl.{Broadcast, GraphDSL, Merge, RunnableGraph}
-import mediator.details.{Flows, Sinks, Sources}
+import akka.stream.scaladsl.{GraphDSL, Merge, RunnableGraph, Sink}
+import mediator.details.{Flows, Sources}
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 
@@ -21,15 +21,17 @@ object Mediator extends App {
 
     val mergeStrings = builder.add(Merge[String](1))
 
-    Sources.prompt ~> mergeStrings ~> Flows.strToBS
+    Sources.prompt ~> mergeStrings ~> Flows.strToBS ~> Sink.ignore
 
     ClosedShape
   })
 
-  def selfRequest(string: String = ""): Unit = Http().singleRequest(HttpRequest(uri = "http://akka.io")).onComplete {
-    case Success(res) => println(res)
-    case Failure(_) =>
-  }
+  def selfRequest(string: String = ""): Unit = Http()
+    .singleRequest(HttpRequest(method = HttpMethods.GET, uri = "http://0.0.0.0/"))
+    .onComplete {
+      case Success(res) => println(res)
+      case Failure(_) =>
+    }
 
 
 }
