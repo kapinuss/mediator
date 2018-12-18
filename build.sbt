@@ -3,17 +3,16 @@ version := "0.1"
 organization := "ru.kapinuss"
 scalaVersion := "2.12.7"
 
-val akkaVersion = "2.5.18"
+val akkaVersion = "2.5.19"
 val akkaHttpVersion = "10.1.5"
 val logbackVersion = "1.2.3"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
-  "javax.xml.bind" % "jaxb-api" % "2.3.0",
+  "com.typesafe.akka" %% "akka-stream-kafka" % "1.0-RC1",
   "com.iheart" %% "ficus" % "1.4.2",
   "org.bouncycastle" % "bcprov-jdk15on" % "1.58",
-  "org.whispersystems" % "curve25519-java" % "0.5.0",
   "ch.qos.logback" % "logback-classic" % logbackVersion,
   "ch.qos.logback" % "logback-core" % logbackVersion
 )
