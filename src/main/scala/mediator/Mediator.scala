@@ -39,8 +39,4 @@ object Mediator extends App {
       case Failure(_) =>
     }
 
-  val config = system.settings.config.getConfig("akka.kafka.producer")
-  val producerSettings =
-    ProducerSettings(config, new StringSerializer, new StringSerializer)
-      .withBootstrapServers(bootstrapServers)
 }
