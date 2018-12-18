@@ -4,10 +4,13 @@ import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpMethods, HttpRequest}
+import akka.kafka.ProducerSettings
 import akka.stream.{ActorMaterializer, ClosedShape}
 import akka.stream.scaladsl.{GraphDSL, Merge, RunnableGraph, Sink}
 import mediator.details.{Flows, Sources}
 import mediator.http.HttpRoute
+import org.apache.kafka.common.serialization.StringSerializer
+
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 
@@ -35,4 +38,9 @@ object Mediator extends App {
       case Success(res) => println(res)
       case Failure(_) =>
     }
+
+  val config = system.settings.config.getConfig("akka.kafka.producer")
+  val producerSettings =
+    ProducerSettings(config, new StringSerializer, new StringSerializer)
+      .withBootstrapServers(bootstrapServers)
 }

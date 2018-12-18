@@ -10,6 +10,7 @@ val logbackVersion = "1.2.3"
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
+  "com.typesafe.akka" %% "akka-stream-kafka" % "1.0-RC1",
   "javax.xml.bind" % "jaxb-api" % "2.3.0",
   "com.iheart" %% "ficus" % "1.4.2",
   "org.bouncycastle" % "bcprov-jdk15on" % "1.58",
