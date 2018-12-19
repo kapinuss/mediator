@@ -11,6 +11,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-stream-kafka" % "1.0-RC1",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
   "com.iheart" %% "ficus" % "1.4.2",
   "org.bouncycastle" % "bcprov-jdk15on" % "1.58",
   "ch.qos.logback" % "logback-classic" % logbackVersion,
