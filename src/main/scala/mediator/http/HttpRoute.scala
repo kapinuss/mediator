@@ -7,8 +7,9 @@ import akka.stream.scaladsl.{RunnableGraph, Sink}
 import mediator.details.Sources
 import mediator.http
 import scala.concurrent.Future
+import com.typesafe.scalalogging.StrictLogging
 
-object HttpRoute {
+object HttpRoute extends StrictLogging {
 
   import mediator.Mediator.materializer
 
@@ -27,4 +28,7 @@ object HttpRoute {
       println("Accepted new connection from " + connection.remoteAddress)
       connection.handleWithSyncHandler(http.HttpRoute.requestHandler)
     })
+
+  Sources.prompt.to(Sink.foreach(each => logger.info(each))).run()
+
 }
