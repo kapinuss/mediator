@@ -20,8 +20,6 @@ object Mediator extends App {
 
   lazy val settings = Settings.settings
 
-  HttpRoute.server.run
-
   val graph = RunnableGraph.fromGraph(GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
     import GraphDSL.Implicits._
     val mergeStrings = builder.add(Merge[String](1))

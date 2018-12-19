@@ -3,12 +3,10 @@ package mediator.http
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpMethods.GET
 import akka.http.scaladsl.model._
-import akka.stream.scaladsl.{RunnableGraph, Sink, Source}
+import akka.stream.scaladsl.{RunnableGraph, Sink}
 import mediator.details.Sources
 import mediator.http
-
 import scala.concurrent.Future
-import scala.io.StdIn
 
 object HttpRoute {
 
@@ -30,7 +28,6 @@ object HttpRoute {
       connection.handleWithSyncHandler(http.HttpRoute.requestHandler)
     })
 
-
-  Source.fromIterator(Iterator.continually[String](() -> StdIn.readLine()))
+  Sources.prompt.to(Sink.foreach(each => println(each))).run()
 
 }
