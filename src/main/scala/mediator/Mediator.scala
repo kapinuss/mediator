@@ -4,14 +4,11 @@ import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpMethods, HttpRequest}
-import akka.kafka.ProducerSettings
 import akka.stream.{ActorMaterializer, ClosedShape}
 import akka.stream.scaladsl.{GraphDSL, Merge, RunnableGraph, Sink}
 import mediator.details.{Flows, Sources}
 import mediator.utils.Settings
 import mediator.http.HttpRoute
-import org.apache.kafka.common.serialization.StringSerializer
-
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 

@@ -3,10 +3,12 @@ package mediator.http
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpMethods.GET
 import akka.http.scaladsl.model._
-import akka.stream.scaladsl.{RunnableGraph, Sink}
+import akka.stream.scaladsl.{RunnableGraph, Sink, Source}
 import mediator.details.Sources
 import mediator.http
+
 import scala.concurrent.Future
+import scala.io.StdIn
 
 object HttpRoute {
 
@@ -27,4 +29,8 @@ object HttpRoute {
       println("Accepted new connection from " + connection.remoteAddress)
       connection.handleWithSyncHandler(http.HttpRoute.requestHandler)
     })
+
+
+  Source.fromIterator(Iterator.continually[String](() -> StdIn.readLine()))
+
 }
